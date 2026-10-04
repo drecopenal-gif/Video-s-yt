@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyVerse | Premium Video Library</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: rgba(17, 24, 39, 0.7);
+      --surface-hover: rgba(31, 41, 55, 0.8);
+      --border: rgba(255, 255, 255, 0.1);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.3);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --diff-none: #475569;
+      --diff-simple: #10b981;
+      --diff-medium: #f59e0b;
+      --diff-hard: #ef4444;
+      
+      --danger: #ef4444;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      padding: 30px 16px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .brand {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #c7d2fe 0%, #818cf8 50%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Bulk Add Panel */
+    .action-panel {
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .panel-title {
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    .input-field {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    textarea.input-field {
+      height: 140px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px var(--primary-glow);
+      transition: all 0.2s;
+      margin-top: 12px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+    }
+
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      font-size: 14.5px;
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.2);
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .crumb {
+      cursor: pointer;
+      color: var(--primary);
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    
+    .crumb:hover {
+      color: #818cf8;
+    }
+
+    .crumb.active {
+      color: #fff;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* Grid for Folders (Subjects/Units) */
+    .grid-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .folder-card {
+      background: var(--surface);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .folder-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .folder-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .folder-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .topics-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topic-row {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .topic-row:hover {
+      background: var(--surface-hover);
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+
+    .topic-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .diff-dot {
+      width: 12px;
+      height: 12px;
+      min-width: 12px;
+      border-radius: 50%;
+      background: var(--diff-none);
+      box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    }
+
+    .diff-dot.simple { background: var(--diff-simple); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+    .diff-dot.medium { background: var(--diff-medium); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+    .diff-dot.hard   { background: var(--diff-hard);   box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+
+    .topic-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topic-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    
+    .icon-btn.edit:hover { color: var(--diff-medium); border-color: var(--diff-medium); }
+    .icon-btn.del:hover { color: var(--danger); border-color: var(--danger); background: rgba(239, 68, 68, 0.1); }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: #0f1523;
+      border: 1px solid rgba(255,255,255,0.15);
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    .modal-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .video-info-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.95rem;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .info-label { color: var(--text-muted); font-weight: 600; min-width: 90px; }
+    .info-val { color: #f1f5f9; font-weight: 500; }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14.5px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      transition: transform 0.2s;
+    }
+    .btn-action:hover { transform: translateY(-2px); }
+
+    .btn-yt { background: #ef4444; color: #fff; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+    .btn-backup { background: #f59e0b; color: #fff; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); margin-top: 10px; }
+    .btn-close { background: rgba(255,255,255,0.08); color: #e2e8f0; margin-top: 24px; border: 1px solid var(--border); }
+
+    /* Difficulty Edit Styles */
+    .diff-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .diff-opt-btn {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      padding: 14px 10px;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .diff-opt-btn:hover { border-color: var(--primary); }
+    .diff-opt-btn.sel-simple { border-color: var(--diff-simple); background: rgba(16, 185, 129, 0.15); }
+    .diff-opt-btn.sel-medium { border-color: var(--diff-medium); background: rgba(245, 158, 11, 0.15); }
+    .diff-opt-btn.sel-hard   { border-color: var(--diff-hard);   background: rgba(239, 68, 68, 0.15); }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e293b;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1 class="brand"><i class="fa-solid fa-layer-group"></i> StudyVerse</h1>
+      <p class="subtitle">Smart Minimalist Video Library Organizer</p>
+    </header>
+
+    <!-- Bulk Add Panel -->
+    <div class="action-panel">
+      <div class="panel-header" onclick="toggleAddPanel()">
+        <div class="panel-title"><i class="fa-solid fa-plus-circle"></i> Bulk Add Topics (નવા ટોપિક ઉમેરો)</div>
+        <i class="fa-solid fa-chevron-down" id="toggleIcon" style="color: var(--text-muted);"></i>
+      </div>
+      
+      <div id="addPanelBody" style="display: none;">
+        <div class="form-grid">
+          <div>
+            <label style="font-size:12px; color:var(--text-muted); font-weight:700;">SUBJECT / વિષય</label>
+            <input type="text" id="inpSubject" class="input-field" placeholder="E.g., Mathematics-1" style="margin-top:6px;">
+          </div>
+          <div>
+            <label style="font-size:12px; color:var(--text-muted); font-weight:700;">UNIT / યુનિટ</label>
+            <input type="text" id="inpUnit" class="input-field" placeholder="E.g., Unit-1" style="margin-top:6px;">
+          </div>
+        </div>
+        
+        <label style="font-size:12px; color:var(--text-muted); font-weight:700;">RAW DATA (Separate topics with '---')</label>
+        <textarea id="inpRaw" class="input-field" style="margin-top:6px;" placeholder="🎯 Topic: [Name]&#10;🎥 Video Title: ...&#10;👨‍🏫 Channel: ...&#10;⏱️ Duration: ...&#10;🔗 YouTube Link: ...&#10;---&#10;🎯 Topic: [Next]..."></textarea>
+        
+        <button class="btn-submit" id="btnSaveBulk" onclick="processBulkData()">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Parse & Save to Database
+        </button>
+      </div>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs" id="breadcrumbs">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Main Content Area (Dynamic) -->
+    <div id="mainView">
+      <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+        <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+        <p style="margin-top: 10px;">Loading Library...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content">
+      <div style="color: #38bdf8; font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
+        <i class="fa-solid fa-circle-play"></i> Best Video
+      </div>
+      <h3 class="modal-title" id="detTopic">Topic Name</h3>
+
+      <div class="video-info-box">
+        <div class="info-row"><span class="info-label">Title:</span> <span class="info-val" id="detTitle"></span></div>
+        <div class="info-row"><span class="info-label">Channel:</span> <span class="info-val" id="detChannel"></span></div>
+        <div class="info-row"><span class="info-label">Duration:</span> <span class="info-val" id="detDuration"></span></div>
+      </div>
+      <a id="detLink" href="#" target="_blank" class="btn-action btn-yt"><i class="fa-brands fa-youtube"></i> Watch Main Video</a>
+
+      <div id="backupSection" style="display: none; margin-top: 24px;">
+        <div style="color: #f59e0b; font-size: 12px; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">
+          <i class="fa-solid fa-rotate-left"></i> Backup Video
+        </div>
+        <div class="video-info-box" style="border-color: rgba(245, 158, 11, 0.3);">
+          <div class="info-row"><span class="info-label">Title:</span> <span class="info-val" id="detBkTitle"></span></div>
+          <div class="info-row"><span class="info-label">Channel:</span> <span class="info-val" id="detBkChannel"></span></div>
+        </div>
+        <a id="detBkLink" href="#" target="_blank" class="btn-action btn-backup"><i class="fa-solid fa-play"></i> Watch Backup Video</a>
+      </div>
+
+      <button class="btn-action btn-close" onclick="closeModal('detailModal')">Close</button>
+    </div>
+  </div>
+
+  <!-- Edit Difficulty Modal -->
+  <div class="modal-overlay" id="editDiffModal">
+    <div class="modal-content" style="max-width: 400px;">
+      <h3 class="modal-title" style="font-size:1.2rem; margin-bottom:8px;">Set Difficulty Level</h3>
+      <p id="editTopicName" style="color:var(--text-muted); font-size:14px; margin-bottom:16px;"></p>
+
+      <div class="diff-options">
+        <button class="diff-opt-btn" id="btnDiffSimple" onclick="saveDifficulty('simple')">
+          <div class="diff-dot simple" style="box-shadow:none;"></div> Simple
+        </button>
+        <button class="diff-opt-btn" id="btnDiffMedium" onclick="saveDifficulty('medium')">
+          <div class="diff-dot medium" style="box-shadow:none;"></div> Medium
+        </button>
+        <button class="diff-opt-btn" id="btnDiffHard" onclick="saveDifficulty('hard')">
+          <div class="diff-dot hard" style="box-shadow:none;"></div> Hard
+        </button>
+      </div>
+
+      <button class="btn-action btn-close" onclick="closeModal('editDiffModal')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Toast Message -->
+  <div id="toast">
+    <i class="fa-solid fa-check-circle" style="color: var(--diff-simple);" id="toastIcon"></i>
+    <span id="toastMsg">Action completed</span>
+  </div>
+
+  <script>
+    const DB_URL = "https://primium-videos-boating-default-rtdb.firebaseio.com/topics";
+    
+    let libraryData = [];
+    let state = {
+      view: 'subjects', // 'subjects' | 'units' | 'topics'
+      selectedSubject: null,
+      selectedUnit: null,
+      editingTopicId: null
+    };
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      const icon = document.getElementById('toastIcon');
+      icon.className = isError ? "fa-solid fa-circle-exclamation" : "fa-solid fa-check-circle";
+      icon.style.color = isError ? "var(--danger)" : "var(--diff-simple)";
+      
+      toast.style.display = 'flex';
+      setTimeout(() => toast.style.display = 'none', 3000);
+    }
+
+    async function fetchLibrary() {
+      try {
+        const res = await fetch(`${DB_URL}.json`);
+        const data = await res.json();
+        
+        if (!data) {
+          libraryData = [];
+        } else {
+          libraryData = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key],
+            subject: data[key].subject || "Uncategorized Subject",
+            unit: data[key].unit || "Uncategorized Unit",
+            difficulty: data[key].difficulty || "none"
+          })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+        }
+        renderApp();
+      } catch (e) {
+        showToast("Error connecting to Database", true);
+        document.getElementById('mainView').innerHTML = `<div style="text-align:center; color:var(--danger);">Failed to load data.</div>`;
+      }
+    }
+
+    function renderApp() {
+      renderBreadcrumbs();
+      const main = document.getElementById('mainView');
+      
+      if (state.view === 'subjects') {
+        const subjects = [...new Set(libraryData.map(t => t.subject))];
+        if (subjects.length === 0) {
+          main.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px;">Library is empty. Please add topics above.</div>`;
+          return;
+        }
+        
+        main.innerHTML = `<div class="grid-view">
+          ${subjects.map(sub => {
+            const count = libraryData.filter(t => t.subject === sub).length;
+            return `
+              <div class="folder-card" onclick="navTo('units', '${sub.replace(/'/g, "\\'")}')">
+                <div class="folder-title"><i class="fa-solid fa-book"></i> ${sub}</div>
+                <div class="folder-meta">${count} Topics Total</div>
+              </div>
+            `;
+          }).join('')}
+        </div>`;
+      } 
+      else if (state.view === 'units') {
+        const subData = libraryData.filter(t => t.subject === state.selectedSubject);
+        const units = [...new Set(subData.map(t => t.unit))];
+        
+        main.innerHTML = `<div class="grid-view">
+          ${units.map(unit => {
+            const count = subData.filter(t => t.unit === unit).length;
+            return `
+              <div class="folder-card" onclick="navTo('topics', '${unit.replace(/'/g, "\\'")}')">
+                <div class="folder-title"><i class="fa-solid fa-folder-open" style="color:var(--primary);"></i> ${unit}</div>
+                <div class="folder-meta">${count} Topics</div>
+              </div>
+            `;
+          }).join('')}
+        </div>`;
+      }
+      else if (state.view === 'topics') {
+        const topics = libraryData.filter(t => t.subject === state.selectedSubject && t.unit === state.selectedUnit);
+        
+        if (topics.length === 0) {
+          main.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px;">No topics found in this unit.</div>`;
+          return;
+        }
+
+        main.innerHTML = `<div class="topics-list">
+          ${topics.map(t => `
+            <div class="topic-row" onclick="openTopicDetail('${t.id}')">
+              <div class="topic-left">
+                <div class="diff-dot ${t.difficulty !== 'none' ? t.difficulty : ''}" title="Difficulty: ${t.difficulty}"></div>
+                <div class="topic-name">${t.topic}</div>
+              </div>
+              <div class="topic-actions" onclick="event.stopPropagation()">
+                <button class="icon-btn edit" title="Edit Difficulty" onclick="openDiffEdit('${t.id}')"><i class="fa-solid fa-pencil"></i></button>
+                <button class="icon-btn del" title="Delete Topic" onclick="deleteTopic('${t.id}')"><i class="fa-solid fa-trash-can"></i></button>
+              </div>
+            </div>
+          `).join('')}
+        </div>`;
+      }
+    }
+
+    function renderBreadcrumbs() {
+      const bc = document.getElementById('breadcrumbs');
+      if (state.view === 'subjects') {
+        bc.innerHTML = `<i class="fa-solid fa-house"></i> <span class="crumb active">Home (Subjects)</span>`;
+      } else if (state.view === 'units') {
+        bc.innerHTML = `
+          <i class="fa-solid fa-house"></i>
+          <span class="crumb" onclick="navTo('subjects')">Home</span>
+          <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+          <span class="crumb active">${state.selectedSubject}</span>
+        `;
+      } else if (state.view === 'topics') {
+        bc.innerHTML = `
+          <i class="fa-solid fa-house"></i>
+          <span class="crumb" onclick="navTo('subjects')">Home</span>
+          <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+          <span class="crumb" onclick="navTo('units', '${state.selectedSubject.replace(/'/g, "\\'")}')">${state.selectedSubject}</span>
+          <i class="fa-solid fa-chevron-right" style="font-size:10px;"></i>
+          <span class="crumb active">${state.selectedUnit}</span>
+        `;
+      }
+    }
+
+    function navTo(view, param = null) {
+      state.view = view;
+      if (view === 'units') state.selectedSubject = param;
+      if (view === 'topics') state.selectedUnit = param;
+      renderApp();
+    }
+
+    function toggleAddPanel() {
+      const body = document.getElementById('addPanelBody');
+      const icon = document.getElementById('toggleIcon');
+      if (body.style.display === 'none') {
+        body.style.display = 'block';
+        icon.className = 'fa-solid fa-chevron-up';
+      } else {
+        body.style.display = 'none';
+        icon.className = 'fa-solid fa-chevron-down';
+      }
+    }
+
+    function parseBlock(blockText) {
+      if (!blockText.includes("Topic:")) return null;
+      
+      const topicMatch = blockText.match(/Topic:\s*\[?(.*?)\]?(?:\n|$)/i);
+      if (!topicMatch) return null;
+
+      // Extract Main
+      const mainTitle = blockText.match(/Video Title:\s*(.*?)(?:\n|$)/i);
+      const mainChannel = blockText.match(/Channel:\s*(.*?)(?:\n|$)/i);
+      const mainDuration = blockText.match(/Duration:\s*(.*?)(?:\n|$)/i);
+      const linkRegex = /(?:YouTube Link:\s*)?(https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^\s]+)/i;
+      
+      // Separate main and backup parts
+      let mainPart = blockText;
+      let backupPart = "";
+      const backupSplit = blockText.split(/Backup Video/i);
+      
+      if (backupSplit.length > 1) {
+        mainPart = backupSplit[0];
+        backupPart = backupSplit[1];
+      }
+
+      const mainLinkMatch = mainPart.match(linkRegex);
+
+      let backup = null;
+      if (backupPart) {
+        const bkTitle = backupPart.match(/Video Title:\s*(.*?)(?:\n|$)/i);
+        const bkChannel = backupPart.match(/Channel:\s*(.*?)(?:\n|$)/i);
+        const bkDuration = backupPart.match(/Duration:\s*(.*?)(?:\n|$)/i);
+        const bkLinkMatch = backupPart.match(linkRegex);
+
+        if (bkTitle || bkLinkMatch) {
+          backup = {
+            title: bkTitle ? bkTitle[1].trim() : "Backup Video",
+            channel: bkChannel ? bkChannel[1].trim() : "-",
+            duration: bkDuration ? bkDuration[1].trim() : "-",
+            link: bkLinkMatch ? bkLinkMatch[1].trim() : "#"
+          };
+        }
+      }
+
+      return {
+        topic: topicMatch[1].trim(),
+        title: mainTitle ? mainTitle[1].trim() : "No Title",
+        channel: mainChannel ? mainChannel[1].trim() : "-",
+        duration: mainDuration ? mainDuration[1].trim() : "-",
+        link: mainLinkMatch ? mainLinkMatch[1].trim() : "#",
+        backup: backup,
+        difficulty: "none",
+        createdAt: Date.now()
+      };
+    }
+
+    async function processBulkData() {
+      const subject = document.getElementById('inpSubject').value.trim();
+      const unit = document.getElementById('inpUnit').value.trim();
+      const raw = document.getElementById('inpRaw').value.trim();
+      const btn = document.getElementById('btnSaveBulk');
+
+      if (!subject || !unit || !raw) {
+        showToast("Please fill Subject, Unit, and Raw Data", true);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+
+      const blocks = raw.split(/\n\s*---\s*\n/);
+      const parsedItems = [];
+
+      blocks.forEach((b, index) => {
+        const item = parseBlock(b);
+        if (item) {
+          item.subject = subject;
+          item.unit = unit;
+          item.createdAt = Date.now() + index; // ensure sequence
+          parsedItems.push(item);
+        }
+      });
+
+      if (parsedItems.length === 0) {
+        showToast("No valid topics found in text.", true);
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Parse & Save to Database`;
+        return;
+      }
+
+      try {
+        for (let item of parsedItems) {
+          await fetch(`${DB_URL}.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item)
+          });
+        }
+        
+        document.getElementById('inpRaw').value = '';
+        toggleAddPanel();
+        showToast(`Saved ${parsedItems.length} topics successfully!`);
+        
+        // Navigate to the newly added unit
+        state.selectedSubject = subject;
+        state.selectedUnit = unit;
+        state.view = 'topics';
+        await fetchLibrary();
+        
+      } catch (e) {
+        showToast("Error saving data", true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Parse & Save to Database`;
+      }
+    }
+
+    async function deleteTopic(id) {
+      if (!confirm("Delete this topic permanently?")) return;
+      try {
+        await fetch(`${DB_URL}/${id}.json`, { method: 'DELETE' });
+        showToast("Topic deleted");
+        fetchLibrary();
+      } catch (e) {
+        showToast("Failed to delete", true);
+      }
+    }
+
+    // Modal UI Handlers
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+      if (id === 'editDiffModal') state.editingTopicId = null;
+    }
+
+    function openTopicDetail(id) {
+      const t = libraryData.find(x => x.id === id);
+      if (!t) return;
+      
+      document.getElementById('detTopic').innerText = t.topic;
+      document.getElementById('detTitle').innerText = t.title;
+      document.getElementById('detChannel').innerText = t.channel;
+      document.getElementById('detDuration').innerText = t.duration;
+      document.getElementById('detLink').href = t.link;
+
+      const bkSec = document.getElementById('backupSection');
+      if (t.backup) {
+        document.getElementById('detBkTitle').innerText = t.backup.title;
+        document.getElementById('detBkChannel').innerText = t.backup.channel;
+        document.getElementById('detBkLink').href = t.backup.link;
+        bkSec.style.display = 'block';
+      } else {
+        bkSec.style.display = 'none';
+      }
+
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function openDiffEdit(id) {
+      const t = libraryData.find(x => x.id === id);
+      if (!t) return;
+      
+      state.editingTopicId = id;
+      document.getElementById('editTopicName').innerText = `Topic: ${t.topic}`;
+      
+      // Reset UI selections
+      ['Simple', 'Medium', 'Hard'].forEach(level => {
+        document.getElementById(`btnDiff${level}`).className = 'diff-opt-btn';
+      });
+
+      if (t.difficulty === 'simple') document.getElementById('btnDiffSimple').classList.add('sel-simple');
+      if (t.difficulty === 'medium') document.getElementById('btnDiffMedium').classList.add('sel-medium');
+      if (t.difficulty === 'hard') document.getElementById('btnDiffHard').classList.add('sel-hard');
+
+      document.getElementById('editDiffModal').style.display = 'flex';
+    }
+
+    async function saveDifficulty(level) {
+      if (!state.editingTopicId) return;
+      try {
+        await fetch(`${DB_URL}/${state.editingTopicId}/difficulty.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(level)
+        });
+        
+        // Optimistic UI update
+        const t = libraryData.find(x => x.id === state.editingTopicId);
+        if (t) t.difficulty = level;
+        
+        renderApp();
+        closeModal('editDiffModal');
+        showToast("Difficulty updated");
+      } catch (e) {
+        showToast("Update failed", true);
+      }
+    }
+
+    // Initialize App
+    fetchLibrary();
+  </script>
+</body>
+</html>

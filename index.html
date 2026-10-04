@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Topics & Video Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-soft: #eef2ff;
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --youtube: #ff0000;
+      --youtube-hover: #cc0000;
+      --backup-color: #f59e0b;
+      --backup-bg: #fffbeb;
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 36px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 820px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    /* Input Section */
+    .add-card {
+      background: var(--surface);
+      padding: 22px;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--border-color);
+      margin-bottom: 32px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 130px;
+      padding: 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: all 0.2s ease;
+      background: #f8fafc;
+      color: var(--text-main);
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+    }
+
+    .btn-submit {
+      margin-top: 14px;
+      width: 100%;
+      background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+      color: white;
+      border: none;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn-submit:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Section Title */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .section-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .badge-counter {
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* Topic Cards List */
+    .topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topic-card {
+      background: var(--surface);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .topic-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.06);
+    }
+
+    .card-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-index {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topic-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge-backup {
+      background: var(--backup-bg);
+      color: #b45309;
+      border: 1px solid #fde68a;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-delete {
+      background: transparent;
+      color: #94a3b8;
+      border: 1px solid #e2e8f0;
+      padding: 7px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .btn-delete:hover {
+      background: #fef2f2;
+      color: #ef4444;
+      border-color: #fecaca;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--surface);
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      border-radius: 18px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: modalScale 0.2s ease-out;
+    }
+
+    @keyframes modalScale {
+      from { transform: scale(0.96); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header-tag {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #16a34a;
+      background: #dcfce7;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      line-height: 1.4;
+      color: var(--text-main);
+    }
+
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .meta-item {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      display: flex;
+      gap: 6px;
+    }
+
+    .meta-label {
+      font-weight: 600;
+      color: #475569;
+      min-width: 95px;
+    }
+
+    .meta-value {
+      color: #0f172a;
+    }
+
+    .btn-yt {
+      background: var(--youtube);
+      color: white;
+      text-decoration: none;
+      padding: 11px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease;
+      box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+    }
+
+    .btn-yt:hover {
+      background: var(--youtube-hover);
+    }
+
+    /* Backup Container */
+    .backup-container {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1.5px dashed var(--border-color);
+    }
+
+    .backup-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .backup-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #b45309;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-toggle-backup {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #475569;
+      transition: all 0.2s ease;
+    }
+
+    .btn-toggle-backup:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .backup-card-body {
+      background: var(--backup-bg);
+      border: 1px solid #fde68a;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+
+    .btn-close-modal {
+      margin-top: 24px;
+      width: 100%;
+      background: #f1f5f9;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-close-modal:hover {
+      background: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>📚 My Learning Hub</h1>
+      <p>ટોપિક અને વિડિયો લાઇબ્રેરી (ક્રમાનુસાર)</p>
+    </header>
+
+    <div class="add-card">
+      <textarea id="rawInput" placeholder="અહીં તમારો ટોપિક અને વિડિયોની વિગત પેસ્ટ કરો...
+🎯 Topic: [નિશ્ચાયકનું મૂલ્ય]
+🎥 Video Title: Unit-1...
+👨‍🏫 Channel: ...
+⏱️ Duration: ...
+🔗 YouTube Link: https://..."></textarea>
+      <button class="btn-submit" id="saveBtn" onclick="addNewTopic()">
+        <span>➕</span> ડેટાબેઝમાં નવો ટોપિક ઉમેરો
+      </button>
+    </div>
+
+    <div class="section-header">
+      <h2>બધા ટોપિક્સ (અભ્યાસ ક્રમ મુજબ)</h2>
+      <span class="badge-counter" id="topicCount">0 Topics</span>
+    </div>
+
+    <div class="topic-list" id="topicList">
+      <p style="text-align:center; color: #94a3b8; padding: 24px;">ડેટાબેઝમાંથી ટોપિક્સ લોડ થઈ રહ્યા છે...</p>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content">
+      
+      <span class="modal-header-tag">🏆 Best Video For You</span>
+      <h3 class="modal-title" id="modalTopic">Topic Title</h3>
+
+      <div class="meta-box">
+        <div class="meta-item">
+          <span class="meta-label">🎥 Video Title:</span>
+          <span class="meta-value" id="modalTitle"></span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">👨‍🏫 Channel:</span>
+          <span class="meta-value" id="modalChannel"></span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">⏱️ Duration:</span>
+          <span class="meta-value" id="modalDuration"></span>
+        </div>
+      </div>
+
+      <a id="modalLink" href="#" target="_blank" class="btn-yt">
+        ▶️ YouTube પર જુઓ
+      </a>
+
+      <!-- BACKUP SECTION -->
+      <div class="backup-container">
+        <div class="backup-header-row">
+          <span class="backup-title">🔁 Backup Video</span>
+          <button class="btn-toggle-backup" id="btnToggleForm" onclick="toggleBackupForm()">
+            + Backup ઉમેરો / બદલો
+          </button>
+        </div>
+
+        <div id="backupDisplay"></div>
+
+        <div id="backupForm" style="display: none; margin-top: 12px;">
+          <textarea id="backupRawInput" style="height: 110px;" placeholder="બેકઅપ વિડિયોનો ટેક્સ્ટ અહીં પેસ્ટ કરો..."></textarea>
+          <button class="btn-submit" style="background: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);" id="btnSaveBackup" onclick="saveBackupVideo()">
+            💾 Backup Video સેવ કરો
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-close-modal" onclick="closeModal()">બંધ કરો (Close)</button>
+    </div>
+  </div>
+
+  <script>
+    const FIREBASE_BASE_URL = "https://primium-videos-boating-default-rtdb.firebaseio.com/topics";
+    let topicsCache = [];
+    let currentTopicId = null;
+
+    // ફોર્મેટમાંથી ટેક્સ્ટ છૂટો પાડવો
+    function parseCustomText(text) {
+      const topicMatch = text.match(/Topic:\s*\[?(.*?)\]?(?:\n|$)/i);
+      const titleMatch = text.match(/Video Title:\s*(.*?)(?:\n|$)/i);
+      const channelMatch = text.match(/Channel:\s*(.*?)(?:\n|$)/i);
+      const durationMatch = text.match(/Duration:\s*(.*?)(?:\n|$)/i);
+      const linkMatch = text.match(/(https?:\/\/[^\s]+)/i);
+
+      return {
+        topic: topicMatch ? topicMatch[1].trim() : "નવો ટોપિક",
+        title: titleMatch ? titleMatch[1].trim() : "વિડિયો ટાઈટલ મળ્યું નથી",
+        channel: channelMatch ? channelMatch[1].trim() : "-",
+        duration: durationMatch ? durationMatch[1].trim() : "-",
+        link: linkMatch ? linkMatch[1].trim() : "#"
+      };
+    }
+
+    // Firebase માંથી ડેટા મેળવવો
+    async function fetchTopics() {
+      const listEl = document.getElementById('topicList');
+      const countEl = document.getElementById('topicCount');
+
+      try {
+        const res = await fetch(`${FIREBASE_BASE_URL}.json`);
+        const data = await res.json();
+
+        if (!data) {
+          topicsCache = [];
+          countEl.innerText = `0 Topics`;
+          listEl.innerHTML = `<p style="text-align:center; color: #94a3b8; padding: 24px;">હજુ સુધી કોઈ ટોપિક ઉમેર્યા નથી. ઉપર પેસ્ટ કરીને સેવ કરો!</p>`;
+          return;
+        }
+
+        // અહી sorting કર્યું: a.createdAt - b.createdAt 
+        // જેથી સૌથી જૂનો (1st) ઉપર અને નવો એની નીચે આવે
+        topicsCache = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
+        })).sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+
+        countEl.innerText = `${topicsCache.length} Topics`;
+        renderList();
+      } catch (err) {
+        listEl.innerHTML = `<p style="text-align:center; color: #ef4444; padding: 24px;">ડેટાબેઝ સાથે જોડાણ થઈ શક્યું નહીં!</p>`;
+      }
+    }
+
+    // નવો ટોપિક ઉમેરવો
+    async function addNewTopic() {
+      const rawText = document.getElementById('rawInput').value.trim();
+      const saveBtn = document.getElementById('saveBtn');
+
+      if (!rawText) {
+        alert("કૃપા કરીને ટેક્સ્ટ પેસ્ટ કરો!");
+        return;
+      }
+
+      const item = {
+        ...parseCustomText(rawText),
+        createdAt: Date.now(),
+        backup: null
+      };
+
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = `<span>⏳</span> સેવ થઈ રહ્યું છે...`;
+
+      try {
+        const res = await fetch(`${FIREBASE_BASE_URL}.json`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(item)
+        });
+
+        if (res.ok) {
+          document.getElementById('rawInput').value = '';
+          await fetchTopics();
+        }
+      } catch (err) {
+        alert("નેટવર્ક એરર આવી!");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `<span>➕</span> ડેટાબેઝમાં નવો ટોપિક ઉમેરો`;
+      }
+    }
+
+    // બેકઅપ વિડિયો સેવ કરવો
+    async function saveBackupVideo() {
+      const rawText = document.getElementById('backupRawInput').value.trim();
+      const btn = document.getElementById('btnSaveBackup');
+
+      if (!rawText) {
+        alert("બેકઅપ વિડિયોનો ટેક્સ્ટ પેસ્ટ કરો!");
+        return;
+      }
+
+      const backupData = parseCustomText(rawText);
+      btn.disabled = true;
+      btn.innerText = "સેવ થાય છે...";
+
+      try {
+        const res = await fetch(`${FIREBASE_BASE_URL}/${currentTopicId}/backup.json`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(backupData)
+        });
+
+        if (res.ok) {
+          document.getElementById('backupRawInput').value = '';
+          document.getElementById('backupForm').style.display = 'none';
+          await fetchTopics();
+          openDetail(currentTopicId);
+        }
+      } catch (err) {
+        alert("બેકઅપ સેવ કરવામાં સમસ્યા આવી!");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "💾 Backup Video સેવ કરો";
+      }
+    }
+
+    // ટોપિક ડિલીટ કરવો
+    async function deleteTopic(e, id) {
+      e.stopPropagation();
+      if (!confirm("શું તમારે આ ટોપિક કાયમ માટે ડિલીટ કરવો છે?")) return;
+
+      try {
+        const res = await fetch(`${FIREBASE_BASE_URL}/${id}.json`, { method: 'DELETE' });
+        if (res.ok) fetchTopics();
+      } catch (err) {
+        alert("ડિલીટ ના થયું!");
+      }
+    }
+
+    // લિસ્ટ સ્ક્રીન પર રેન્ડર કરવું
+    function renderList() {
+      const listEl = document.getElementById('topicList');
+      if (topicsCache.length === 0) {
+        listEl.innerHTML = `<p style="text-align:center; color: #94a3b8; padding: 24px;">કોઈ ટોપિક નથી.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = topicsCache.map((item, index) => `
+        <div class="topic-card" onclick="openDetail('${item.id}')">
+          <div class="card-left">
+            <div class="card-index">${index + 1}</div>
+            <div class="card-info">
+              <div class="topic-title">
+                ${item.topic}
+                ${item.backup ? `<span class="badge-backup">🔁 Backup</span>` : ''}
+              </div>
+              <div class="topic-subtitle">
+                <span>👨‍🏫 ${item.channel}</span>
+                <span>⏱️ ${item.duration}</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-delete" title="Delete Topic" onclick="deleteTopic(event, '${item.id}')">ડિલીટ</button>
+        </div>
+      `).join('');
+    }
+
+    // ડિટેલ પોપઅપ ખોલવું
+    function openDetail(id) {
+      currentTopicId = id;
+      const item = topicsCache.find(it => it.id === id);
+      if (!item) return;
+
+      document.getElementById('modalTopic').innerText = `🎯 ${item.topic}`;
+      document.getElementById('modalTitle').innerText = item.title;
+      document.getElementById('modalChannel').innerText = item.channel;
+      document.getElementById('modalDuration').innerText = item.duration;
+      document.getElementById('modalLink').href = item.link;
+
+      const backupDisplay = document.getElementById('backupDisplay');
+      if (item.backup) {
+        backupDisplay.innerHTML = `
+          <div class="backup-card-body">
+            <div class="meta-item"><span class="meta-label">🎥 Title:</span><span class="meta-value">${item.backup.title}</span></div>
+            <div class="meta-item" style="margin-top:6px;"><span class="meta-label">👨‍🏫 Channel:</span><span class="meta-value">${item.backup.channel}</span></div>
+            <div class="meta-item" style="margin-top:6px;"><span class="meta-label">⏱️ Duration:</span><span class="meta-value">${item.backup.duration}</span></div>
+            <a href="${item.backup.link}" target="_blank" class="btn-yt" style="background:#b45309; margin-top:12px; font-size:13px; padding:8px 14px;">
+              ▶️ Backup Video ખોલો
+            </a>
+          </div>
+        `;
+      } else {
+        backupDisplay.innerHTML = `<p style="font-size:13px; color:var(--text-muted); margin: 6px 0;">કોઈ બેકઅપ વિડિયો ઉમેરેલ નથી.</p>`;
+      }
+
+      document.getElementById('backupForm').style.display = 'none';
+      document.getElementById('detailModal').style.display = 'flex';
+    }
+
+    function toggleBackupForm() {
+      const form = document.getElementById('backupForm');
+      form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').style.display = 'none';
+      currentTopicId = null;
+    }
+
+    // પેજ લોડ થતાં જ ડેટા ફેચ કરો
+    fetchTopics();
+  </script>
+</body>
+  </html>
+  
